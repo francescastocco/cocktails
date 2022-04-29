@@ -15,11 +15,10 @@ interface DrinkResponse {
 
 export function Grid({
     numberOfPairs}: GridProps) {
-    const [drinksList, setDrinksList] = useState<number[]>([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+    const [drinksList, setDrinksList] = useState<DrinkResponse[]>([]);
     const [selectedDrinks, setSelectedDrinks] = useState<number[]>([]);
     
-  const [randomDrink, setRandomDrink] = useState<DrinkResponse>()
-
+  
     useEffect(() => {
         changeDrink()
       }, []);
@@ -27,16 +26,17 @@ export function Grid({
       function changeDrink() {
         fetch(`https://www.thecocktaildb.com/api/json/v1/1/random.php`)
         .then(res => res.json())
-        .then(result => setRandomDrink(result.drinks[0]))
+        .then(result => setDrinksList([
+            result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0], 
+            result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0],
+            result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0],
+            result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0], result.drinks[0]]))
       }
     
     return <div className='grid-container'>
-        {[randomDrink, randomDrink, randomDrink, randomDrink, randomDrink, 
-          randomDrink, randomDrink, randomDrink, randomDrink, randomDrink,
-          randomDrink, randomDrink, randomDrink, randomDrink, randomDrink,
-          randomDrink, randomDrink, randomDrink, randomDrink, randomDrink,].map((drink: DrinkResponse | undefined, index: number) => {
+        {drinksList.map((drink: DrinkResponse | undefined, index: number) => {
             return <div className='grid-item'>
-                <Card id={index} onClick={(id: number) => console.log(`id ${id} clicked`)} image={randomDrink?.strDrinkThumb} />
+                <Card id={index} onClick={(id: number) => console.log(`id ${id} clicked`)} image={drink?.strDrinkThumb} />
                 </div>
           })}
     </div>
