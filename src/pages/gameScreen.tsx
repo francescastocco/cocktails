@@ -21,11 +21,17 @@ const StyledGameScreen = `
 `;
 
 const GameScreen: React.FC<GameScreenProps> = ({ onBackClicked , numberOfPairs}) => (
-    <header className="App-header">
-        <h1>Cocktail Pairs</h1>
-        <Grid numberOfPairs={numberOfPairs}/>
-        <button onClick={() => onBackClicked()}>Back</button>  
-    </header>
+    <div>
+        <div>
+            <h1>Cocktail Pairs</h1>
+        </div>
+        <header className="App-header">
+            <Grid numberOfPairs={numberOfPairs}/>
+        </header>
+        <div>
+            <button onClick={() => onBackClicked()}>Back</button>  
+        </div>
+    </div>
 );
 
 export default GameScreen;
