@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import {Cocktail} from "./models";
 import './App.css';
 import GameScreen from "./pages/gameScreen";
@@ -7,10 +6,11 @@ import GameScreen from "./pages/gameScreen";
 
 let initialRandomCocktailList: Cocktail[] = [];
 
-function App() {
+export default function App() {
   const [randomCocktail, setRandomCocktail] = useState<Cocktail | undefined>(undefined);
   const [randomCocktailList, setCocktailList] = useState<Cocktail[]>(initialRandomCocktailList);
   const [showPairMatchScreen, setShowPairMatchScreen] = useState<boolean>(false);
+  const [numberOfPairs, setNumberOfPairs] = useState<number>(10);
 
 
 // 20 cocktails in random order
@@ -78,7 +78,7 @@ function App() {
     <div className="App">
       <header className="App-header">
       { showPairMatchScreen
-                            ? <GameScreen onBackClicked={onBackClicked}/>
+                            ? <GameScreen onBackClicked={onBackClicked} numberOfPairs={numberOfPairs}/>
                             : <>
                                 <h1>{randomCocktail?.name}</h1>
                                 <img src={randomCocktail?.imageUrl}></img>
@@ -86,10 +86,7 @@ function App() {
                                 <button onClick={() => initiateGame()}>Match Pair Game</button>  
                             </>
                         }
-        
       </header>
     </div>
   );
 }
-
-export default App;
