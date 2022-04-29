@@ -2,10 +2,16 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import {Cocktail} from "./models";
 import './App.css';
+import GameScreen from "./pages/gameScreen";
+
+
+let initialRandomCocktailList: Cocktail[] = [];
 
 function App() {
   const [randomCocktail, setRandomCocktail] = useState<Cocktail | undefined>(undefined);
-  const [randomCocktailList, setCocktailList] = useState<Cocktail[]>();
+  const [randomCocktailList, setCocktailList] = useState<Cocktail[]>(initialRandomCocktailList);
+  const [showPairMatchScreen, setShowPairMatchScreen] = useState<boolean>(false);
+
 
 // 20 cocktails in random order
   useEffect(() => {
@@ -13,9 +19,18 @@ function App() {
   }, []);
   
   function getAndStoreRandomDrinks(noOfDrinks: number) {
+    let fetchedRandomCocktailList : Cocktail[] = [];
     for (let i=0; i<noOfDrinks; i++) {
-      
+      fetchNewDrink()
+      .then(result => {
+        const newCocktail = {
+          name: result.drinks[0].strDrink,
+          imageUrl: result.drinks[0].strDrinkThumb
+        };
+        fetchedRandomCocktailList.push(newCocktail);
+    })
     }
+    setCocktailList(fetchedRandomCocktailList);
   }
 
   function fetchNewDrink() {
@@ -35,12 +50,43 @@ function App() {
     })
   }
 
+  function createAndShufflePairs(noOfDrinks: number) {
+    const originalCocktailCards = [...randomCocktailList];
+    const pairedCocktailCards = [...randomCocktailList];
+    let shuffledCocktailCards : Cocktail[] = originalCocktailCards.concat(pairedCocktailCards);
+    shuffledCocktailCards.sort(() => Math.random() - 0.5);
+
+    return {
+      shuffledCocktailCards
+    };
+    
+  }
+
+  function initiateGame() {
+    console.log("initiate game")
+    const noOfPairs = 10;
+    getAndStoreRandomDrinks(noOfPairs);
+    createAndShufflePairs(noOfPairs);
+    setShowPairMatchScreen(true);
+  }
+
+  const onBackClicked = () => {
+    setShowPairMatchScreen(false);
+}
+
   return (
     <div className="App">
       <header className="App-header">
-        <h1>{randomCocktail?.name}</h1>
-        <img src={randomCocktail?.imageUrl}></img>
-        <button onClick={() => changeDrink()}>Change</button>
+      { showPairMatchScreen
+                            ? <GameScreen onBackClicked={onBackClicked}/>
+                            : <>
+                                <h1>{randomCocktail?.name}</h1>
+                                <img src={randomCocktail?.imageUrl}></img>
+                                <button onClick={() => changeDrink()}>Change Cocktail</button>
+                                <button onClick={() => initiateGame()}>Match Pair Game</button>  
+                            </>
+                        }
+        
       </header>
     </div>
   );
