@@ -1,0 +1,26 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    border: 2px solid #E25C5C;
+    position: absolute;
+    left: 24.7%;
+    right: 26%;
+    top: 30.5%;
+    bottom: 7.88%;
+    padding: 2px;
+    border-radius: 5px;
+  }
+  
+  .grid-item {
+    border: 2px solid #E25C5C;
+    left: 26.2%;
+    right: 27.2%;
+    font-family: RobotoMono;
+    line-height: 36px;
+    font-size: 36px;
+    letter-spacing: 2.9px;
+    font-style: normal;
+    font-weight: normal;
+    text-align: center;
+    padding: 2px;
+  }

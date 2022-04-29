@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Grid} from './components/Grid';
 
-function App() {
-  const [randomDrink, setRandomDrink] = useState('random drink')
-
-  useEffect(() => {
-    changeDrink()
-  }, []);
-  
-  function changeDrink() {
-    fetch(`https://www.thecocktaildb.com/api/json/v1/1/random.php`)
-    .then(res => res.json())
-    .then(result => setRandomDrink(result.drinks[0].strDrink))
-  }
-
+export default function App() {
+    const [numberOfPairs, setNumberOfPairs] = useState<number>(10);
+ 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>{randomDrink}</h1>
-        <button onClick={() => changeDrink()}>Change</button>
-      </header>
+        <h1>Cocktail Pairs</h1>
+        <Grid numberOfPairs={numberOfPairs}/>
     </div>
   );
 }
-
-export default App;
