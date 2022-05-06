@@ -1,5 +1,8 @@
 import React from 'react';
+import { getRandomCocktail } from '../apiClient/randomDrink';
 import {Grid} from '../components/Grid';
+import { Cocktail } from '../models';
+
 
 interface GameScreenProps {
     onBackClicked: () => void;
@@ -26,7 +29,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ onBackClicked , numberOfPairs})
             <h1>Cocktail Pairs</h1>
         </div>
         <header className="App-header">
-            <Grid numberOfPairs={numberOfPairs}/>
+            <Grid />
         </header>
         <div>
             <button onClick={() => onBackClicked()}>Back</button>  

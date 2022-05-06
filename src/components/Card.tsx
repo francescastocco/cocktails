@@ -3,21 +3,21 @@ import '../App.css'
 import placeholder from '../resources/placeholder.png'
 
 interface Props {
+    name: string
     id: number
-    image: string | undefined
-    onClick: (id: number) => void
+    image: string
+    flipped: boolean
+    onClick: (id: number, name: string) => void
 }
 
 export const Card = (props: Props) => {
-    const [flipped, setFlipped] = useState(false)
 
     const onCardClick = () => {
-        props.onClick(props.id)
-        setFlipped(!flipped)
+        props.onClick(props.id, props.name)
     }
 
     const getImage = () => {
-        if (!props.image || !flipped) {
+        if (!props.flipped) {
             return placeholder
         } else {
             return props.image
