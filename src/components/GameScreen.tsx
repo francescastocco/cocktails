@@ -1,9 +1,11 @@
 import React from 'react';
-import {Grid} from '../components/Grid';
+import { Cocktail } from '../models';
+import {Grid} from './Grid';
 
 interface GameScreenProps {
     onBackClicked: () => void;
     numberOfPairs: number;
+    randomCocktailList: Cocktail[];
 }
 
 const StyledGameScreen = `
@@ -20,18 +22,17 @@ const StyledGameScreen = `
   padding: 0 20px;
 `;
 
-const GameScreen: React.FC<GameScreenProps> = ({ onBackClicked , numberOfPairs}) => (
+export function GameScreen({onBackClicked, numberOfPairs, randomCocktailList}: GameScreenProps) {
+    return (
     <div>
         <div>
             <h1>Cocktail Pairs</h1>
         </div>
         <header className="App-header">
-            <Grid numberOfPairs={numberOfPairs}/>
+            <Grid randomCocktailList={randomCocktailList}/>
         </header>
         <div>
             <button onClick={() => onBackClicked()}>Back</button>  
         </div>
-    </div>
-);
-
-export default GameScreen;
+    </div>)
+}

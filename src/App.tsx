@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {Cocktail} from "./models";
 import './App.css';
-import GameScreen from "./pages/gameScreen";
+import {GameScreen} from "./components/GameScreen";
 
-
-let initialRandomCocktailList: Cocktail[] = [];
 
 export default function App() {
   const [randomCocktail, setRandomCocktail] = useState<Cocktail | undefined>(undefined);
-  const [randomCocktailList, setCocktailList] = useState<Cocktail[]>(initialRandomCocktailList);
+  const [randomCocktailList, setRandomCocktailList] = useState<Cocktail[]>([]);
   const [showPairMatchScreen, setShowPairMatchScreen] = useState<boolean>(false);
   const [numberOfPairs, setNumberOfPairs] = useState<number>(10);
 
@@ -17,37 +15,39 @@ export default function App() {
   useEffect(() => {
     changeDrink()
   }, []);
+
+  useEffect(() => {
+    createAndShufflePairs(10)
+  }, [randomCocktailList])
   
-  function getAndStoreRandomDrinks(noOfDrinks: number) {
-    let fetchedRandomCocktailList : Cocktail[] = [];
+  async function getAndStoreRandomDrinks(noOfDrinks: number) {
+    const cocktailList = [];
     for (let i=0; i<noOfDrinks; i++) {
-      fetchNewDrink()
-      .then(result => {
-        const newCocktail = {
-          name: result.drinks[0].strDrink,
-          imageUrl: result.drinks[0].strDrinkThumb
-        };
-        fetchedRandomCocktailList.push(newCocktail);
-    })
+      const newCocktail = await fetchNewDrink()
+        console.log(newCocktail);
+        cocktailList.push(newCocktail);
+    
     }
-    setCocktailList(fetchedRandomCocktailList);
+    console.log(cocktailList)
+    setRandomCocktailList(cocktailList);
+    //this logs an empty array because the state is constant in each function
+    console.log(randomCocktailList)
   }
 
-  function fetchNewDrink() {
-    return (
-      fetch(`https://www.thecocktaildb.com/api/json/v1/1/random.php`)
-      .then(res => res.json()))
+  async function fetchNewDrink(): Promise<Cocktail> {
+    const drink = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/random.php`)
+    .then(res => res.json())
+    return {
+      name: drink.drinks[0].strDrink,
+      imageUrl: drink.drinks[0].strDrinkThumb
+    };
+      
   }
 
-  function changeDrink() {
-    fetchNewDrink()
-    .then(result => {
-      const newCocktail = {
-        name: result.drinks[0].strDrink,
-        imageUrl: result.drinks[0].strDrinkThumb
-      };
+  async function changeDrink() {
+    const newCocktail = await fetchNewDrink();
       setRandomCocktail(newCocktail);
-    })
+    
   }
 
   function createAndShufflePairs(noOfDrinks: number) {
@@ -55,18 +55,17 @@ export default function App() {
     const pairedCocktailCards = [...randomCocktailList];
     let shuffledCocktailCards : Cocktail[] = originalCocktailCards.concat(pairedCocktailCards);
     shuffledCocktailCards.sort(() => Math.random() - 0.5);
-
-    return {
-      shuffledCocktailCards
-    };
+console.log(shuffledCocktailCards)
+    return shuffledCocktailCards;
     
   }
 
-  function initiateGame() {
+  async function initiateGame() {
     console.log("initiate game")
     const noOfPairs = 10;
-    getAndStoreRandomDrinks(noOfPairs);
-    createAndShufflePairs(noOfPairs);
+    await getAndStoreRandomDrinks(noOfPairs);
+    setRandomCocktailList(createAndShufflePairs(noOfPairs));
+    console.log(randomCocktailList)
     setShowPairMatchScreen(true);
   }
 
@@ -78,7 +77,7 @@ export default function App() {
     <div className="App">
       <header className="App-header">
       { showPairMatchScreen
-                            ? <GameScreen onBackClicked={onBackClicked} numberOfPairs={numberOfPairs}/>
+                            ? <GameScreen onBackClicked={onBackClicked} numberOfPairs={numberOfPairs} randomCocktailList={randomCocktailList}/>
                             : <>
                                 <h1>{randomCocktail?.name}</h1>
                                 <img src={randomCocktail?.imageUrl}></img>
